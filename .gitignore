@@ -1,0 +1,41 @@
+# ===================================================================
+# Arquivo .gitignore para o projeto Oppus (Backend Node.js/TypeScript)
+# ===================================================================
+
+# -- Arquivos Sensíveis --
+# NUNCA envie suas variáveis de ambiente para o repositório!
+.env
+
+# -- Dependências --
+# Ignora QUALQUER pasta node_modules em QUALQUER lugar do projeto.
+node_modules/
+
+# -- Build Output (Arquivos Gerados pelo TypeScript) --
+# Ignora a pasta onde o JavaScript compilado é gerado.
+dist/
+build/
+# Arquivo de cache de compilação do TypeScript
+tsconfig.tsbuildinfo
+
+# -- Logs --
+# Ignora qualquer arquivo de log gerado pela aplicação ou pelo npm/yarn.
+*.log
+npm-debug.log*
+yarn-error.log
+yarn-debug.log*
+
+# -- Arquivos de IDEs e Editores de Código --
+# Configurações específicas do ambiente local de cada desenvolvedor.
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# -- Arquivos de Sistema Operacional --
+# Arquivos de metadados gerados pelo macOS e Windows.
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos temporários e logs
+temp/*
+!temp/.gitkeep

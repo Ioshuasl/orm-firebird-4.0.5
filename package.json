@@ -1,0 +1,25 @@
+{
+  "name": "orius-firebird-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "metadata": "ts-node src/services/exportMetadataToJson.ts",
+    "discover": "ts-node src/discoverGenerators.ts",
+    "hunt": "ts-node src/huntTrigger.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "node-firebird": "^2.0.2",
+    "ts-node-dev": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0"
+  }
+}
