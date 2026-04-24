@@ -4,22 +4,35 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "patch-package",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev:server": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "metadata": "ts-node src/services/exportMetadataToJson.ts",
+    "gen:models": "ts-node src/generateModels.ts",
+    "gen:services": "ts-node src/generateServices.ts",
+    "gen:api": "ts-node src/generateControllersAndRoutes.ts",
+    "validate:associations": "ts-node src/validateAssociations.ts",
     "discover": "ts-node src/discoverGenerators.ts",
     "hunt": "ts-node src/huntTrigger.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "start:server": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
+    "express": "^5.2.1",
     "node-firebird": "^2.0.2",
+    "sequelize": "^6.37.8",
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.3.0"
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.0",
+    "patch-package": "^8.0.1"
   }
 }

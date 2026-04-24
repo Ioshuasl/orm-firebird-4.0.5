@@ -10,6 +10,9 @@ export const Op = {
     in: Symbol('IN'),
     notIn: Symbol('NOT IN'),
     between: Symbol('BETWEEN'),
+    notBetween: Symbol('NOT BETWEEN'),
     and: Symbol('AND'),
-    or: Symbol('OR')
+    or: Symbol('OR'),
+    is: Symbol('IS'),
+    not: Symbol('NOT')
 };

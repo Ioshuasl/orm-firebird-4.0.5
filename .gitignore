@@ -6,6 +6,9 @@
 # NUNCA envie suas variáveis de ambiente para o repositório!
 .env
 
+sequelize-reference/
+patches/
+
 # -- Dependências --
 # Ignora QUALQUER pasta node_modules em QUALQUER lugar do projeto.
 node_modules/

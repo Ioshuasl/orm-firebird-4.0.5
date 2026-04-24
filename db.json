@@ -57114,6 +57114,18 @@
         "default_value": null,
         "primary_key": false,
         "fk": null
+      },
+      {
+        "nome": "ID_NFSE",
+        "tipo": "INTEGER",
+        "tamanho": 4,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
       }
     ]
   },
@@ -59790,6 +59802,250 @@
         "nome": "DATA_CONVERSAO",
         "tipo": "TIMESTAMP",
         "tamanho": 8,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "TIPO_PESSOA",
+        "tipo": "CHAR",
+        "tamanho": 1,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": true,
+        "auto_increment": false,
+        "default_value": "(transaction, callback) => {\n        // callback(error, nameField, eventEmitter, row)\n        const singleTransaction = callback === undefined;\n        if (singleTransaction) {\n            callback = transaction;\n            statement.connection.startTransaction(Const.ISOLATION_READ_UNCOMMITTED, (err, transaction) => {\n                if (err) {\n                    callback(err);\n                    return;\n                }\n                cbTransaction(transaction, singleTransaction, callback);\n            });\n        } else {\n            cbTransaction(transaction, singleTransaction, callback);\n        }\n    }",
+        "primary_key": false,
+        "fk": null
+      }
+    ]
+  },
+  "R_PESSOA_DOCUMENTO": {
+    "tabela": "R_PESSOA_DOCUMENTO",
+    "colunas": [
+      {
+        "nome": "PESSOA_DOCUMENTO_ID",
+        "tipo": "BIGINT",
+        "tamanho": 8,
+        "precisao": 10,
+        "escala": 0,
+        "obrigatorio": true,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": true,
+        "fk": null
+      },
+      {
+        "nome": "PESSOA_ID",
+        "tipo": "BIGINT",
+        "tamanho": 8,
+        "precisao": 10,
+        "escala": 0,
+        "obrigatorio": true,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": {
+          "referencia_tabela": "R_PESSOA",
+          "referencia_coluna": "PESSOA_ID"
+        }
+      },
+      {
+        "nome": "TB_DOCUMENTOTIPO_ID",
+        "tipo": "BIGINT",
+        "tamanho": 8,
+        "precisao": 10,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "NUMERO",
+        "tipo": "VARCHAR",
+        "tamanho": 120,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "ORGAO_EXPEDIDOR",
+        "tipo": "VARCHAR",
+        "tamanho": 15,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "ORGAO_EXPEDIDOR_UF",
+        "tipo": "VARCHAR",
+        "tamanho": 3,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "DATA_EMISSAO",
+        "tipo": "TIMESTAMP",
+        "tamanho": 8,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "DATA_VALIDADE",
+        "tipo": "TIMESTAMP",
+        "tamanho": 8,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      }
+    ]
+  },
+  "R_PESSOA_ENDERECO": {
+    "tabela": "R_PESSOA_ENDERECO",
+    "colunas": [
+      {
+        "nome": "PESSOA_ENDERECO_ID",
+        "tipo": "BIGINT",
+        "tamanho": 8,
+        "precisao": 10,
+        "escala": 0,
+        "obrigatorio": true,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": true,
+        "fk": null
+      },
+      {
+        "nome": "PESSOA_ID",
+        "tipo": "BIGINT",
+        "tamanho": 8,
+        "precisao": 10,
+        "escala": 0,
+        "obrigatorio": true,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": {
+          "referencia_tabela": "R_PESSOA",
+          "referencia_coluna": "PESSOA_ID"
+        }
+      },
+      {
+        "nome": "TIPO_ENDERECO",
+        "tipo": "VARCHAR",
+        "tamanho": 20,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "LOGRADOURO",
+        "tipo": "VARCHAR",
+        "tamanho": 120,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "NUMERO",
+        "tipo": "VARCHAR",
+        "tamanho": 20,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "COMPLEMENTO",
+        "tipo": "VARCHAR",
+        "tamanho": 60,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "BAIRRO",
+        "tipo": "VARCHAR",
+        "tamanho": 60,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "CIDADE",
+        "tipo": "VARCHAR",
+        "tamanho": 60,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "UF",
+        "tipo": "VARCHAR",
+        "tamanho": 3,
+        "precisao": 0,
+        "escala": 0,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "CEP",
+        "tipo": "VARCHAR",
+        "tamanho": 10,
         "precisao": 0,
         "escala": 0,
         "obrigatorio": false,
@@ -84541,6 +84797,18 @@
         "tamanho": 8,
         "precisao": 10,
         "escala": 2,
+        "obrigatorio": false,
+        "auto_increment": false,
+        "default_value": null,
+        "primary_key": false,
+        "fk": null
+      },
+      {
+        "nome": "NFSE_ID",
+        "tipo": "INTEGER",
+        "tamanho": 4,
+        "precisao": 0,
+        "escala": 0,
         "obrigatorio": false,
         "auto_increment": false,
         "default_value": null,
