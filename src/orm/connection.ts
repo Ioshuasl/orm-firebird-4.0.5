@@ -1,4 +1,5 @@
 import * as Firebird from 'node-firebird';
+import { materializeBlobsInRows } from './blob-utils';
 import { ConnectionAcquireTimeoutError, mapDatabaseError } from './errors';
 import { sanitizeIdentifier } from './sql-utils';
 
@@ -85,11 +86,17 @@ export class Connection {
         sql: string,
         params: any[] = [],
         transaction?: Firebird.Transaction,
-        options: { logging?: boolean | ((sql: string, timingMs?: number) => void); benchmark?: boolean } = {}
+        options: {
+            logging?: boolean | ((sql: string, timingMs?: number) => void);
+            benchmark?: boolean;
+            /** BLOB: node-firebird devolve função por coluna; materializa antes de libertar a conexão. */
+            materializeBlobs?: boolean;
+        } = {}
     ): Promise<T[]> {
         const logMode = options.logging ?? this.logging;
         const benchmark = options.benchmark ?? this.benchmark;
         const startTime = benchmark ? Date.now() : 0;
+        const wantBlobs = options.materializeBlobs === true;
 
         const logQuery = () => {
             if (!logMode) return;
@@ -105,9 +112,17 @@ export class Connection {
         if (transaction) {
             return new Promise((resolve, reject) => {
                 transaction.execute(sql, params, (queryErr, result) => {
-                    if (queryErr) return reject(mapDatabaseError(queryErr));
+                    if (queryErr) {
+                        return reject(mapDatabaseError(queryErr));
+                    }
                     logQuery();
-                    resolve(result as T[]);
+                    if (wantBlobs) {
+                        materializeBlobsInRows(result)
+                            .then(() => resolve(result as T[]))
+                            .catch((e) => reject(e));
+                    } else {
+                        resolve(result as T[]);
+                    }
                 });
             });
         }
@@ -115,10 +130,27 @@ export class Connection {
         return new Promise((resolve, reject) => {
             this.acquireConnection().then((db) => {
                 db.query(sql, params, (queryErr, result) => {
-                    db.detach(); // Devolve ao pool
-                    if (queryErr) return reject(mapDatabaseError(queryErr));
-                    logQuery();
-                    resolve(result as T[]);
+                    if (queryErr) {
+                        db.detach();
+                        return reject(mapDatabaseError(queryErr));
+                    }
+                    const finish = () => {
+                        logQuery();
+                        db.detach();
+                        resolve(result as T[]);
+                    };
+                    if (wantBlobs) {
+                        materializeBlobsInRows(result)
+                            .then(finish)
+                            .catch((e) => {
+                                db.detach();
+                                reject(e);
+                            });
+                    } else {
+                        logQuery();
+                        db.detach();
+                        resolve(result as T[]);
+                    }
                 });
             }).catch((err) => reject(err));
         });

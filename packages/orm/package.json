@@ -1,0 +1,26 @@
+{
+  "name": "@orius/firebird-orm",
+  "version": "0.1.0",
+  "description": "Sequelize-like ORM for Firebird, extracted from Orius ORM.",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "node-firebird": "^2.0.2"
+  }
+}

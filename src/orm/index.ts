@@ -320,6 +320,7 @@ export type DefineModelOptions = ModelInitOptions & {
     modelName?: string;
 };
 
+export { materializeNodeFirebirdBlob, materializeBlobsInRows } from './blob-utils';
 export { Connection } from './connection';
 export { DataType } from './data-types';
 export { DataTypes } from './data-types';

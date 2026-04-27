@@ -20,6 +20,9 @@ build/
 # Arquivo de cache de compilação do TypeScript
 tsconfig.tsbuildinfo
 
+# Módulo RI (metadado local, export ri:data, ri_data_blobs, documentação de trabalho)
+RI/
+
 # -- Logs --
 # Ignora qualquer arquivo de log gerado pela aplicação ou pelo npm/yarn.
 *.log

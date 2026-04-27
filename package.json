@@ -8,6 +8,14 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "dev:server": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
+    "build:orm": "tsc -p packages/orm/tsconfig.build.json",
+    "pack:orm": "npm pack ./packages/orm",
+    "gen:ri-db": "node RI/scripts/extract-ri-tables.js",
+    "gen:ri-tabelas-md": "node RI/scripts/ri-json-tabelas-md.js",
+    "gen:ri-mermaid": "node RI/scripts/generate-ri-mermaid.js",
+    "gen:ri-mapeamento": "node RI/scripts/emit-ri-mapeamento.mjs",
+    "ri:contagem": "ts-node --transpile-only src/count-ri-tabelas.ts",
+    "ri:data": "ts-node --transpile-only src/ri-data-json.ts",
     "metadata": "ts-node src/services/exportMetadataToJson.ts",
     "gen:models": "ts-node src/generateModels.ts",
     "gen:services": "ts-node src/generateServices.ts",
@@ -30,6 +38,7 @@
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.12.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.3.0",
