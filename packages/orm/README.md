@@ -1,21 +1,58 @@
-# @orius/firebird-orm
+# ocr-firebird
 
 ORM para Firebird com API inspirada no Sequelize (classes de model, `Op`, `include`, hooks, scopes e transações).
 
 ## Instalação
+Use esta seção para instalar a biblioteca e preparar as dependências mínimas no projeto.
 
 ```bash
-npm i @orius/firebird-orm node-firebird
+npm i ocr-firebird node-firebird
 ```
 
 > `node-firebird` é o driver de conexão com o Firebird.
 
-## Quickstart
+## Pré-requisitos
+Antes de rodar os exemplos, garanta que seu ambiente local e seu servidor Firebird atendem aos requisitos básicos abaixo.
 
-### 1) `new OriusORM(...)`
+- Node.js 18+ (recomendado Node.js 20+)
+- Acesso a um banco Firebird (local ou remoto)
+- Credenciais válidas para conexão (`host`, `port`, `database`, `user`, `password`)
+- Permissão de rede para acessar a porta do Firebird (normalmente `3050`)
+- Dependência `node-firebird` instalada (o `ocr-firebird` já declara essa dependência)
+
+## Compatibilidade
+O pacote funciona em projetos JavaScript e TypeScript no Node.js, com runtime em JavaScript e tipagem oficial para TypeScript.
+
+### Uso em JavaScript (CommonJS)
+Use `require` quando seu projeto estiver em JavaScript tradicional (CommonJS).
+
+```js
+const { OriusORM } = require('ocr-firebird');
+
+const orm = new OriusORM({
+  host: '127.0.0.1',
+  port: 3050,
+  database: 'SAOFRANCISCO',
+  user: 'SYSDBA',
+  password: 'masterkey'
+});
+```
+
+### Uso em TypeScript (ESM/CJS)
+Use `import` para aproveitar as tipagens incluídas no pacote (`.d.ts`).
 
 ```ts
-import { OriusORM } from '@orius/firebird-orm';
+import { OriusORM } from 'ocr-firebird';
+```
+
+## Quickstart
+Este fluxo mostra o caminho mais curto para criar a instância do ORM e validar conexão.
+
+### 1) `new OriusORM(...)`
+Nesta etapa você configura a conexão com o Firebird e opções de execução do ORM.
+
+```ts
+import { OriusORM } from 'ocr-firebird';
 
 const orm = new OriusORM({
   host: '127.0.0.1',
@@ -31,18 +68,58 @@ const orm = new OriusORM({
 ```
 
 ### 2) `orm.authenticate()`
+Aqui você valida se as credenciais e o endpoint do banco estão corretos antes de usar models.
 
 ```ts
 await orm.authenticate();
 // Resposta esperada: conexão validada com sucesso.
 ```
 
-## Definição de modelos
-
-### `Model.init(...)`
+### 3) `Model.sync(...)` e `syncOriusORM(...)`
+Use esta etapa para sincronizar estruturas de tabela/relacionamento com base nos models já registrados no ORM.
 
 ```ts
-import { Model, DataTypes } from '@orius/firebird-orm';
+import { syncOriusORM } from 'ocr-firebird';
+
+// Sincroniza todos os models registrados no orm (cria tabelas faltantes e depois FKs faltantes)
+const fullSync = await syncOriusORM(orm, {
+  logging: true
+});
+
+// Sincroniza somente um model específico
+await G_USUARIO.sync({ orm, logging: true });
+
+// Modo seguro de prévia (não executa SQL, apenas gera no resultado)
+const preview = await syncOriusORM(orm, {
+  dryRun: true
+});
+console.log(preview.sql);
+```
+
+Opções mais úteis de sincronização:
+
+- `dryRun`: gera SQL sem executar no banco.
+- `force`: remove tabelas existentes (ordem reversa de dependência) e recria. Use com cautela.
+- `fksOnly`: aplica somente FKs faltantes.
+- `tablesOnly`: cria somente tabelas/colunas (sem FKs).
+- `modelNames`: sincroniza apenas subset de models por nome de classe ou tabela.
+
+Retorno de sincronização (`SyncResult`):
+
+- `createdTables`: tabelas criadas.
+- `createdForeignKeys`: constraints FK criadas.
+- `droppedTables`: tabelas removidas quando `force` estiver ativo.
+- `skipped`: itens já existentes que foram ignorados.
+- `sql`: SQL gerado/executado em ordem.
+
+## Definição de modelos
+Esta seção apresenta as formas principais de mapear tabelas Firebird para classes e modelos ORM.
+
+### `Model.init(...)`
+Use este formato quando quiser declarar a estrutura do model de forma explícita e orientada a classe.
+
+```ts
+import { Model, DataTypes } from 'ocr-firebird';
 
 class G_USUARIO extends Model {}
 
@@ -62,9 +139,10 @@ G_USUARIO.init(
 ```
 
 ### `orm.define(...)`
+Use este formato para registrar modelos dinamicamente com menos boilerplate.
 
 ```ts
-import { DataType } from '@orius/firebird-orm';
+import { DataType } from 'ocr-firebird';
 
 const T_ATO = orm.define(
   'T_ATO',
@@ -81,6 +159,7 @@ const T_ATO = orm.define(
 ```
 
 ## DataTypes e validação (`validate`)
+Aqui você define tipos de coluna e regras de validação para impedir dados inválidos em runtime.
 
 ```ts
 const Usuario = orm.define(
@@ -111,6 +190,7 @@ const Usuario = orm.define(
 ```
 
 ## CRUD principal
+Este bloco cobre as operações básicas de criação, leitura, atualização e remoção de registros.
 
 ```ts
 // CREATE
@@ -150,6 +230,7 @@ const deleted = await T_ATO.destroy({
 ```
 
 ## Transações
+Use transações para garantir consistência quando múltiplas operações precisam ter sucesso juntas.
 
 ```ts
 await orm.transaction(async (tx) => {
@@ -167,6 +248,7 @@ await orm.transaction(async (tx) => {
 ```
 
 ### Transação aninhada (savepoint)
+Este padrão permite isolar partes da transação com rollback parcial via savepoints.
 
 ```ts
 await orm.transaction(async (txPai) => {
@@ -177,6 +259,7 @@ await orm.transaction(async (txPai) => {
 ```
 
 ## Associações
+Esta seção mostra como relacionar modelos para consultar dados conectados entre tabelas.
 
 ```ts
 G_USUARIO.hasMany(T_ATO, {
@@ -193,9 +276,10 @@ T_ATO.belongsTo(G_USUARIO, {
 ```
 
 ## Consultas com `where`, `include`, includes aninhados e operadores
+Aqui você encontra exemplos de filtros avançados, joins por associação e operadores no estilo Sequelize.
 
 ```ts
-import { Op } from '@orius/firebird-orm';
+import { Op } from 'ocr-firebird';
 
 const atos = await T_ATO.findAll({
   where: {
@@ -216,6 +300,7 @@ const atos = await T_ATO.findAll({
 ```
 
 ### Include aninhado
+Use include aninhado para carregar relacionamentos em múltiplos níveis na mesma consulta.
 
 ```ts
 const result = await T_ATO.findAll({
@@ -236,6 +321,7 @@ const result = await T_ATO.findAll({
 ```
 
 ### Include com `separate: true`
+Este modo executa consultas separadas por associação para cenários específicos de desempenho e paginação.
 
 ```ts
 const users = await G_USUARIO.findAll({
@@ -252,6 +338,7 @@ const users = await G_USUARIO.findAll({
 ```
 
 ## Hooks
+Hooks permitem executar lógica antes e depois de eventos de persistência como create, update e destroy.
 
 ```ts
 T_ATO.beforeCreate((instance) => {
@@ -280,12 +367,14 @@ T_ATO.afterDestroy((instance) => {
 ```
 
 ## Encerramento da conexão
+Finalize o pool de conexões ao encerrar a aplicação para liberar recursos corretamente.
 
 ```ts
 orm.close();
 ```
 
 ## Build local da lib
+Este comando gera a pasta `dist` usada para distribuição do pacote npm.
 
 No repositório raiz:
 
@@ -294,6 +383,7 @@ npm run build:orm
 ```
 
 ## Publicação no npm
+Siga estes passos para publicar uma nova versão da biblioteca no registro do npm.
 
 ```bash
 cd packages/orm

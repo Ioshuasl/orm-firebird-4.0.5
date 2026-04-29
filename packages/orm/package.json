@@ -1,7 +1,7 @@
 {
-  "name": "@orius/firebird-orm",
+  "name": "ocr-firebird",
   "version": "0.1.0",
-  "description": "Sequelize-like ORM for Firebird, extracted from Orius ORM.",
+  "description": "Sequelize-like Firebird ORM compatible with JavaScript and TypeScript.",
   "license": "ISC",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,6 +16,14 @@
     "README.md"
   ],
   "sideEffects": false,
+  "keywords": [
+    "firebird",
+    "orm",
+    "sequelize-like",
+    "javascript",
+    "typescript",
+    "nodejs"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run build"

@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "orm-firebird-py"
+version = "0.1.0"
+description = "Sequelize-like Firebird ORM for Python"
+readme = "readme_py.md"
+requires-python = ">=3.10"
+authors = [
+  { name = "Kenio" }
+]
+keywords = ["firebird", "orm", "sequelize-like", "sqlalchemy", "database"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Database",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+  "SQLAlchemy==2.0.42",
+  "sqlalchemy-firebird==2.1",
+  "firebird-base==2.0.2",
+  "firebird-driver==2.0.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/kenio/orius-firebird-node"
+Repository = "https://github.com/kenio/orius-firebird-node"
+Documentation = "https://github.com/kenio/orius-firebird-node/blob/main/readme_py.md"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["orm_py*"]

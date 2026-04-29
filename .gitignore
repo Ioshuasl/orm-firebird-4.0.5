@@ -20,6 +20,22 @@ build/
 # Arquivo de cache de compilação do TypeScript
 tsconfig.tsbuildinfo
 
+# -- Python Build/Packaging --
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.venv/
+venv/
+
 # Módulo RI (metadado local, export ri:data, ri_data_blobs, documentação de trabalho)
 RI/
 
